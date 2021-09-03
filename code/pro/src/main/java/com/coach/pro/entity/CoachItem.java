@@ -7,13 +7,13 @@ package com.coach.pro.entity;
 public class CoachItem {
     int id;//ID
     String ItemCode;//ItemCode
-    String SKUID;//SKUID
+    int SkuId;//SkuId
     String ProductName;//商品名称
-    String AssetID;//AssetID
+    String AssetId;//AssetId
     String Brand;//品牌
     String SKUDesc;//商品简介
-    String SKUShortName; //SKUShortName
-    String SkuSeries;//系列
+    String SKUshortName; //SKUShortName
+    String SKUSeries;//系列
     String SKUModel;//型号
     String SKUSpec;//参数
     String UserSKUCode;//产品目录
@@ -45,19 +45,20 @@ public class CoachItem {
     String StockNum;//库存
     String StockStatus;//在库状态
     String CreateTime;//数据生成时间
+    String TaskId;
+    String ShopLab;
 
-
-    public CoachItem(){};
-    public CoachItem(int id, String itemCode, String SKUID, String productName, String assetID, String brand, String SKUDesc, String SKUShortName, String skuSeries, String SKUModel, String SKUSpec, String userSKUCode, String URL, String channel, String shopName, String isAuthor, String daigou, String originalPrice, String activityPrice, String guidancePrice, String finalPrice, String marginPrice, String marginPercent, String markdownPercent, String insertDate, String shopId, String viewTime, String sellerLocation, String isbreakPrice, String isTariff, String tariff, String tariffPrice, String allPromotion, String usePromotion, String superPromotion, String scrollSales, String commentNum, String stockNum, String stockStatus, String createTime) {
+    public CoachItem() {}
+    public CoachItem(int id, String itemCode, int skuId, String productName, String assetID, String brand, String SKUDesc, String SKUshortName, String SKUSeries, String SKUModel, String SKUSpec, String userSKUCode, String URL, String channel, String shopName, String isAuthor, String daigou, String originalPrice, String activityPrice, String guidancePrice, String finalPrice, String marginPrice, String marginPercent, String markdownPercent, String insertDate, String shopId, String viewTime, String sellerLocation, String isbreakPrice, String isTariff, String tariff, String tariffPrice, String allPromotion, String usePromotion, String superPromotion, String scrollSales, String commentNum, String stockNum, String stockStatus, String createTime, String taskId, String shopLab) {
         this.id = id;
         ItemCode = itemCode;
-        this.SKUID = SKUID;
+        SkuId = skuId;
         ProductName = productName;
-        AssetID = assetID;
+        AssetId = assetID;
         Brand = brand;
         this.SKUDesc = SKUDesc;
-        this.SKUShortName = SKUShortName;
-        SkuSeries = skuSeries;
+        this.SKUshortName = SKUshortName;
+        this.SKUSeries = SKUSeries;
         this.SKUModel = SKUModel;
         this.SKUSpec = SKUSpec;
         UserSKUCode = userSKUCode;
@@ -89,6 +90,8 @@ public class CoachItem {
         StockNum = stockNum;
         StockStatus = stockStatus;
         CreateTime = createTime;
+        TaskId = taskId;
+        ShopLab = shopLab;
     }
 
     public int getId() {
@@ -107,12 +110,12 @@ public class CoachItem {
         ItemCode = itemCode;
     }
 
-    public String getSKUID() {
-        return SKUID;
+    public int getSkuId() {
+        return SkuId;
     }
 
-    public void setSKUID(String SKUID) {
-        this.SKUID = SKUID;
+    public void setSkuId(int skuId) {
+        SkuId = skuId;
     }
 
     public String getProductName() {
@@ -124,11 +127,11 @@ public class CoachItem {
     }
 
     public String getAssetID() {
-        return AssetID;
+        return AssetId;
     }
 
     public void setAssetID(String assetID) {
-        AssetID = assetID;
+        AssetId = assetID;
     }
 
     public String getBrand() {
@@ -147,20 +150,20 @@ public class CoachItem {
         this.SKUDesc = SKUDesc;
     }
 
-    public String getSKUShortName() {
-        return SKUShortName;
+    public String getSKUshortName() {
+        return SKUshortName;
     }
 
-    public void setSKUShortName(String SKUShortName) {
-        this.SKUShortName = SKUShortName;
+    public void setSKUshortName(String SKUshortName) {
+        this.SKUshortName = SKUshortName;
     }
 
-    public String getSkuSeries() {
-        return SkuSeries;
+    public String getSKUSeries() {
+        return SKUSeries;
     }
 
-    public void setSkuSeries(String skuSeries) {
-        SkuSeries = skuSeries;
+    public void setSKUSeries(String SKUSeries) {
+        this.SKUSeries = SKUSeries;
     }
 
     public String getSKUModel() {
@@ -411,18 +414,42 @@ public class CoachItem {
         CreateTime = createTime;
     }
 
+    public String getTaskId() {
+        return TaskId;
+    }
+
+    public void setTaskId(String taskId) {
+        TaskId = taskId;
+    }
+
+    public String getShopLab() {
+        return ShopLab;
+    }
+
+    public void setShopLab(String shopLab) {
+        ShopLab = shopLab;
+    }
+
+//    @Override
+//    public int compareTo(CoachItem c) {
+//        //int i=Math.abs(Double.parseDouble(c.getMarginPrice()))-Math.abs(Integer.parseInt(this.getMarginPrice()));
+//        Double a=Math.abs(Double.parseDouble(c.getMarginPrice()));
+//        Double b=Math.abs(Double.parseDouble(this.getMarginPrice()));
+//        return a.compareTo(b);
+//    }
+
     @Override
     public String toString() {
         return "CoachItem{" +
                 "id=" + id +
                 ", ItemCode='" + ItemCode + '\'' +
-                ", SKUID='" + SKUID + '\'' +
+                ", SkuId=" + SkuId +
                 ", ProductName='" + ProductName + '\'' +
-                ", AssetID='" + AssetID + '\'' +
+                ", AssetID='" + AssetId + '\'' +
                 ", Brand='" + Brand + '\'' +
                 ", SKUDesc='" + SKUDesc + '\'' +
-                ", SKUShortName='" + SKUShortName + '\'' +
-                ", SkuSeries='" + SkuSeries + '\'' +
+                ", SKUshortName='" + SKUshortName + '\'' +
+                ", SKUSeries='" + SKUSeries + '\'' +
                 ", SKUModel='" + SKUModel + '\'' +
                 ", SKUSpec='" + SKUSpec + '\'' +
                 ", UserSKUCode='" + UserSKUCode + '\'' +
@@ -454,6 +481,8 @@ public class CoachItem {
                 ", StockNum='" + StockNum + '\'' +
                 ", StockStatus='" + StockStatus + '\'' +
                 ", CreateTime='" + CreateTime + '\'' +
+                ", TaskId='" + TaskId + '\'' +
+                ", ShopLab='" + ShopLab + '\'' +
                 '}';
     }
 }

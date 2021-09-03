@@ -71,7 +71,7 @@ public class AccessInterface {
         JSONObject jsonData=jsonObject.getJSONObject("data");
         //System.out.println(jsonData);
         JSONObject page=jsonData.getJSONObject("page");
-        System.out.println("数据总量:"+page.getString("count"));
+        //System.out.println("数据总量:"+page.getString("count"));
         return page.getString("count");
     }
 }
