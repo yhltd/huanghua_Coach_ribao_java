@@ -1,67 +1,24 @@
-package com.coach.pro.controller;
+package com.coach.pro;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.coach.pro.entity.*;
 import com.coach.pro.util.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 /**
  * @author wanghui
- * @date 2021/08/30 10:47
+ * @date 2021/09/05 13:30
  */
-@RestController
-@RequestMapping("/item_info")
-public class ItemInfoController {
-    /**
-     * @return 返回jsonArray
-     */
-    @PostMapping("/getItem")
-    public ResultInfo getList() {
-        try {
-            //接口url
-            String url = "http://imagetest.simplybrand.com/api/product/findProductInfoPage";
-            //参数
-            String param = "TaskID=47&SubID=1&page=1&size=";
-            //参数
-            String size = "1";
-            String content = "BPSProductInfo";
-            //获取总数据量
-            //size = "12";
-            size = AccessInterface.getCount(AccessInterface.sendGet(url, param + size + "&token=" + Encryption.Encrypt(content)));
-            //获取全部数据
-            String json = AccessInterface.sendGet(url, param + size + "&token=" + Encryption.Encrypt(content));
-            JSONObject jsonObject = JSONObject.parseObject(json);
-            JSONObject jsonData = jsonObject.getJSONObject("data");
-            JSONArray jsonArray = jsonData.getJSONArray("data");
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            Calendar now = Calendar.getInstance();
-            now.setTime(date);
-            now.add(Calendar.DAY_OF_MONTH, -1);
-            System.out.println(sdf.format(now.getTime()));
-
-            return ResultInfo.success("获取成功", jsonArray);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultInfo.error("错误!");
-        }
-    }
-
-    @PostMapping("/toExcel")
-    public ResultInfo toExcel(HttpServletResponse response) throws IOException {
+@Component
+public class Implementation {
+    //定义一个按一定频率执行的定时任务
+    @Scheduled(cron = "0 0 6 * * ?")
+    public static void toExcdel() throws Exception {
         try {
             //接口url
             String url = "http://imagetest.simplybrand.com/api/product/findProductInfoPage";
@@ -92,6 +49,8 @@ public class ItemInfoController {
             //set转为list
             List<String> quchong = new ArrayList<>();
             quchong.addAll(set);
+
+
             for (int i = 0; i < quchong.size(); i++) {
                 //根据SKU分类信息判断
                 if (StringUtils.retail.contains(quchong.get(i))) {
@@ -854,65 +813,64 @@ public class ItemInfoController {
             now.setTime(date);
             now.add(Calendar.DAY_OF_MONTH, -1);
             System.out.println(sdf.format(now.getTime()));
-//            String path = Thread.currentThread().getContextClassLoader().getResource("static/excel/").getPath();
-//
-//            if(path.substring(0,4).equals("file")){
-//                path=Thread.currentThread().getContextClassLoader().getResource("static/excel/").getPath().substring(5);
-//            }else{
-//                path=Thread.currentThread().getContextClassLoader().getResource("static/excel/").getPath().substring(1);
-//            }
+
             String path = "C:\\coach\\excel\\";
             GenerateExcel.retail_Shop_QuanWang_excel(path + "retail_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx", QuanWang, retail_shop);
             GenerateExcel.retail_sku_excel(path + "Price Variance Check Report – Retail Date" + sdf.format(now.getTime()) + ".xlsx", retail_sku);
             GenerateExcel.outlet_Shop_QuanWang_excel(path + "outlet_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx", QuanWang, outlet_Shop);
             GenerateExcel.outlet_sku_excel(path + "Price Variance Check Report – Outlet Date" + sdf.format(now.getTime()) + ".xlsx", outlet_sku);
+            System.out.println("成功");
 
-//            GenerateExcel.retail_Shop_QuanWang_excel("E:\\yhltd129\\工作\\huanghua_Coach_ribao_java\\code\\pro\\src\\main\\resources\\static\\excel\\retail_店铺&全网日报日期"+sdf.format(new Date())+".xlsx",Retail_QuanWang,retail_shop);
-//            GenerateExcel.retail_sku_excel("E:\\yhltd129\\工作\\huanghua_Coach_ribao_java\\code\\pro\\src\\main\\resources\\static\\excel\\Price Variance Check Report – Retail Date"+sdf.format(new Date())+".xlsx",retail_sku);
-//            GenerateExcel.outlet_Shop_QuanWang_excel("E:\\yhltd129\\工作\\huanghua_Coach_ribao_java\\code\\pro\\src\\main\\resources\\static\\excel\\outlet_店铺&全网日报日期"+sdf.format(new Date())+".xlsx",outlet_QuanWang,outlet_Shop);
-//            GenerateExcel.outlet_sku_excel("E:\\yhltd129\\工作\\huanghua_Coach_ribao_java\\code\\pro\\src\\main\\resources\\static\\excel\\Price Variance Check Report – Outlet Date"+sdf.format(new Date())+".xlsx",outlet_sku);
-
-            Email email = new Email();
-            email.retailShopSend("retail_店铺&全网日报", path + "retail_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
-                    "<br>" +
-                    "Attached please find the COACH Online Shop&Entire Network Report for your reference." +
-                    "<br>" + "Please be noted — Date is capture from" + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm." +
-                    "<br>" + "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/a0b923820dcc509a/Sku" +
-                    "<br><br>" +
-                    "simplyBrand BPS <br>" +
-                    "System service mail", "retail_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx");
-
-            email.retailSkuSend("Price Variance Check Report – Retail", path + "Price Variance Check Report – Retail Date" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
-                    "<br>" +
-                    "Attached please find the COACH Online Shop&Entire Network Report for your reference. <br>" +
-                    "Please be noted — Date is capture from" + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm. <br>" +
-                    "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/9d4c2f636f067f89/Sku <br>" +
-                    "<br><br>" +
-                    "simplyBrand BPS <br>" +
-                    "System service mail", "Price Variance Check Report – Retail Date" + sdf.format(now.getTime()) + ".xlsx");
-
-            email.outletShopSend("outlet_店铺&全网日报", path + "outlet_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
-                    "<br>" +
-                    "Attached please find the Price Variance Check Report – Retail for your reference. <br>" +
-                    "Please be noted — Date is capture from " + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm. <br>" +
-                    "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/a0b923820dcc509a/Sku <br>" +
-                    "<br>" +
-                    "simplyBrand BPS <br>" +
-                    "System service mail", "outlet_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx");
-            email.outletSkuSend("Price Variance Check Report – Outlet", path + "Price Variance Check Report – Outlet Date" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
-                    "<br>" +
-                    "Attached please find the COACH Online Pricing Report for your reference. <br>" +
-                    "Please be noted — Date is capture from " + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm. <br>" +
-                    "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/9d4c2f636f067f89/Sku <br>" +
-                    "<br>" +
-                    "simplyBrand BPS <br>" +
-                    "System service mail", "Price Variance Check Report – Outlet Date" + sdf.format(now.getTime()) + ".xlsx");
-            return ResultInfo.success("成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultInfo.error("错误!");
         }
     }
 
+    @Scheduled(cron = "0 30 10 * * ?")
+    public static void sendEmail() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        Calendar now = Calendar.getInstance();
+        now.setTime(date);
+        now.add(Calendar.DAY_OF_MONTH, -1);
+        System.out.println(sdf.format(now.getTime()));
+        //String path = Thread.currentThread().getContextClassLoader().getResource("static/excel/").getPath();
+        String path = "C:\\coach\\excel\\";
+        Email email = new Email();
+        email.retailShopSend("retail_店铺&全网日报", path + "retail_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
+                "<br>" +
+                "Attached please find the COACH Online Shop&Entire Network Report for your reference." +
+                "<br>" + "Please be noted — Date is capture from" + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm." +
+                "<br>" + "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/a0b923820dcc509a/Sku" +
+                "<br><br>" +
+                "simplyBrand BPS <br>" +
+                "System service mail", "retail_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx");
 
+        email.retailSkuSend("Price Variance Check Report – Retail", path + "Price Variance Check Report – Retail Date" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
+                "<br>" +
+                "Attached please find the COACH Online Shop&Entire Network Report for your reference. <br>" +
+                "Please be noted — Date is capture from" + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm. <br>" +
+                "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/9d4c2f636f067f89/Sku <br>" +
+                "<br><br>" +
+                "simplyBrand BPS <br>" +
+                "System service mail", "Price Variance Check Report – Retail Date" + sdf.format(now.getTime()) + ".xlsx");
+
+        email.outletShopSend("outlet_店铺&全网日报", path + "outlet_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
+                "<br>" +
+                "Attached please find the Price Variance Check Report – Retail for your reference. <br>" +
+                "Please be noted — Date is capture from " + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm. <br>" +
+                "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/a0b923820dcc509a/Sku <br>" +
+                "<br>" +
+                "simplyBrand BPS <br>" +
+                "System service mail", "outlet_店铺&全网日报日期" + sdf.format(now.getTime()) + ".xlsx");
+        email.outletSkuSend("Price Variance Check Report – Outlet", path + "Price Variance Check Report – Outlet Date" + sdf.format(now.getTime()) + ".xlsx", "Dear All,<br>" +
+                "<br>" +
+                "Attached please find the COACH Online Pricing Report for your reference. <br>" +
+                "Please be noted — Date is capture from " + sdf.format(now.getTime()) + " 12am _ " + sdf.format(now.getTime()) + " 12pm. <br>" +
+                "Please promptly to the link for more data information: http://dailyreport.simplybrand.com/coach-report/#/9d4c2f636f067f89/Sku <br>" +
+                "<br>" +
+                "simplyBrand BPS <br>" +
+                "System service mail", "Price Variance Check Report – Outlet Date" + sdf.format(now.getTime()) + ".xlsx");
+        System.out.println("发送邮件成功！");
+    }
 }

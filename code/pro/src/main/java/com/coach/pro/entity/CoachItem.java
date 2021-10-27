@@ -47,8 +47,12 @@ public class CoachItem {
     String CreateTime;//数据生成时间
     String TaskId;
     String ShopLab;
+    int cishu;
 
     public CoachItem() {}
+    public CoachItem(String userSKUCode) {
+        UserSKUCode = userSKUCode;
+    }
     public CoachItem(int id, String itemCode, int skuId, String productName, String assetID, String brand, String SKUDesc, String SKUshortName, String SKUSeries, String SKUModel, String SKUSpec, String userSKUCode, String URL, String channel, String shopName, String isAuthor, String daigou, String originalPrice, String activityPrice, String guidancePrice, String finalPrice, String marginPrice, String marginPercent, String markdownPercent, String insertDate, String shopId, String viewTime, String sellerLocation, String isbreakPrice, String isTariff, String tariff, String tariffPrice, String allPromotion, String usePromotion, String superPromotion, String scrollSales, String commentNum, String stockNum, String stockStatus, String createTime, String taskId, String shopLab) {
         this.id = id;
         ItemCode = itemCode;
@@ -92,6 +96,22 @@ public class CoachItem {
         CreateTime = createTime;
         TaskId = taskId;
         ShopLab = shopLab;
+    }
+
+    public String getAssetId() {
+        return AssetId;
+    }
+
+    public void setAssetId(String assetId) {
+        AssetId = assetId;
+    }
+
+    public int getCishu() {
+        return cishu;
+    }
+
+    public void setCishu(int cishu) {
+        this.cishu = cishu;
     }
 
     public int getId() {
@@ -429,14 +449,6 @@ public class CoachItem {
     public void setShopLab(String shopLab) {
         ShopLab = shopLab;
     }
-
-//    @Override
-//    public int compareTo(CoachItem c) {
-//        //int i=Math.abs(Double.parseDouble(c.getMarginPrice()))-Math.abs(Integer.parseInt(this.getMarginPrice()));
-//        Double a=Math.abs(Double.parseDouble(c.getMarginPrice()));
-//        Double b=Math.abs(Double.parseDouble(this.getMarginPrice()));
-//        return a.compareTo(b);
-//    }
 
     @Override
     public String toString() {

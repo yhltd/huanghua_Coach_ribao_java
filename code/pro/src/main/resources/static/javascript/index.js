@@ -5,18 +5,21 @@ $(function () {
             alert('已刷新')
         })
     })
-    getList()
+    getList();
 })
 
 $(function () {
     //导出按钮点击事件
     $('#send-btn').click(function () {
+        alert("运行时间可能较长，请耐心等待！")
         $ajax({
             type: 'post',
             url: '/item_info/toExcel',
         }, false, '', function (res) {
             if (res.code == 200) {
                 alert("发送成功！");
+            }else{
+                alert("发送失败！");
             }
         })
     })

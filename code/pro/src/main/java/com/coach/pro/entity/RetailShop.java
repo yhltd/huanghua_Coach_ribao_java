@@ -8,37 +8,46 @@ public class RetailShop {
     String UserSKUCode;//产品目录
     String GuanFang_price;//官方指导价
     String GuanFangCuXiao_price;//官方指导促销价
+    String GF_Jiacha;//官方指导价价差
+    String GFCX_Jiacha;//官方指导促销价价差
+    String Final_Jiacha;//到手价价差
+
 
     String TmPrice;//天猫到手价
     String TmPriceDifference;//天猫是否有差异
     String TmDiscount;//天猫应用机制
     String TMBiaoZhunPrice;//天猫标准价(官方指导促销价)
+    String TMUrl;//链接
 
     String CoachPrice;//官网到手价
     String CoachPriceDifference;//官网是否有差异
     String CoachPriceDiscount;//官网应用机制
     String CoachBiaoZhunPrice;//官网标准价(官方指导促销价)
+    String CoachUrl;//链接
 
     String LingShouPrice;//零售精品店到手价
     String LingShouPriceDifference;//零售精品店是否有差异
     String LingShouPriceDiscount;//零售精品店应用机制
     String LingShouBiaoZhunPrice;//官网标准价(官方指导促销价)
+    String LingShouUrl;//链接
 
     String JDPrice;//京东到手价
     String JDPriceDifference;//京东店是否有差异
     String JDPriceDiscount;//京东店应用机制
     String JDBiaoZhunPrice;//京东标准价(官方指导促销价)
+    String JDUrl;//链接
 
     String OverseasPrice;//海外到手价
     String OverseasPriceDifference;//海外是否有差异
     String OverseasPriceDiscount;//海外应用机制
     String OverseasBiaoZhunPrice;//海外标准价(官方指导促销价)
+    String OverseasUrl;//链接
 
     public RetailShop(){}
     public RetailShop(String userSKUCode){
         UserSKUCode = userSKUCode;
     }
-    public RetailShop(String userSKUCode, String guanFang_price, String guanFangCuXiao_price, String tmPrice, String tmPriceDifference, String tmDiscount, String TMBiaoZhunPrice, String coachPrice, String coachPriceDifference, String coachPriceDiscount, String coachBiaoZhunPrice, String lingShouPrice, String lingShouPriceDifference, String lingShouPriceDiscount, String lingShouBiaoZhunPrice, String JDPrice, String JDPriceDifference, String JDPriceDiscount, String JDBiaoZhunPrice, String overseasPrice, String overseasPriceDifference, String overseasPriceDiscount, String overseasBiaoZhunPrice) {
+    public RetailShop(String userSKUCode, String guanFang_price, String guanFangCuXiao_price, String tmPrice, String tmPriceDifference, String tmDiscount, String TMBiaoZhunPrice, String TMUrl, String coachPrice, String coachPriceDifference, String coachPriceDiscount, String coachBiaoZhunPrice, String coachUrl, String lingShouPrice, String lingShouPriceDifference, String lingShouPriceDiscount, String lingShouBiaoZhunPrice, String lingShouUrl, String JDPrice, String JDPriceDifference, String JDPriceDiscount, String JDBiaoZhunPrice, String JDUrl, String overseasPrice, String overseasPriceDifference, String overseasPriceDiscount, String overseasBiaoZhunPrice, String overseasUrl) {
         UserSKUCode = userSKUCode;
         GuanFang_price = guanFang_price;
         GuanFangCuXiao_price = guanFangCuXiao_price;
@@ -46,22 +55,27 @@ public class RetailShop {
         TmPriceDifference = tmPriceDifference;
         TmDiscount = tmDiscount;
         this.TMBiaoZhunPrice = TMBiaoZhunPrice;
+        this.TMUrl = TMUrl;
         CoachPrice = coachPrice;
         CoachPriceDifference = coachPriceDifference;
         CoachPriceDiscount = coachPriceDiscount;
         CoachBiaoZhunPrice = coachBiaoZhunPrice;
+        CoachUrl = coachUrl;
         LingShouPrice = lingShouPrice;
         LingShouPriceDifference = lingShouPriceDifference;
         LingShouPriceDiscount = lingShouPriceDiscount;
         LingShouBiaoZhunPrice = lingShouBiaoZhunPrice;
+        LingShouUrl = lingShouUrl;
         this.JDPrice = JDPrice;
         this.JDPriceDifference = JDPriceDifference;
         this.JDPriceDiscount = JDPriceDiscount;
         this.JDBiaoZhunPrice = JDBiaoZhunPrice;
+        this.JDUrl = JDUrl;
         OverseasPrice = overseasPrice;
         OverseasPriceDifference = overseasPriceDifference;
         OverseasPriceDiscount = overseasPriceDiscount;
         OverseasBiaoZhunPrice = overseasBiaoZhunPrice;
+        OverseasUrl = overseasUrl;
     }
 
     public String getUserSKUCode() {
@@ -120,6 +134,14 @@ public class RetailShop {
         this.TMBiaoZhunPrice = TMBiaoZhunPrice;
     }
 
+    public String getTMUrl() {
+        return TMUrl;
+    }
+
+    public void setTMUrl(String TMUrl) {
+        this.TMUrl = TMUrl;
+    }
+
     public String getCoachPrice() {
         return CoachPrice;
     }
@@ -150,6 +172,14 @@ public class RetailShop {
 
     public void setCoachBiaoZhunPrice(String coachBiaoZhunPrice) {
         CoachBiaoZhunPrice = coachBiaoZhunPrice;
+    }
+
+    public String getCoachUrl() {
+        return CoachUrl;
+    }
+
+    public void setCoachUrl(String coachUrl) {
+        CoachUrl = coachUrl;
     }
 
     public String getLingShouPrice() {
@@ -184,6 +214,14 @@ public class RetailShop {
         LingShouBiaoZhunPrice = lingShouBiaoZhunPrice;
     }
 
+    public String getLingShouUrl() {
+        return LingShouUrl;
+    }
+
+    public void setLingShouUrl(String lingShouUrl) {
+        LingShouUrl = lingShouUrl;
+    }
+
     public String getJDPrice() {
         return JDPrice;
     }
@@ -214,6 +252,14 @@ public class RetailShop {
 
     public void setJDBiaoZhunPrice(String JDBiaoZhunPrice) {
         this.JDBiaoZhunPrice = JDBiaoZhunPrice;
+    }
+
+    public String getJDUrl() {
+        return JDUrl;
+    }
+
+    public void setJDUrl(String JDUrl) {
+        this.JDUrl = JDUrl;
     }
 
     public String getOverseasPrice() {
@@ -248,32 +294,35 @@ public class RetailShop {
         OverseasBiaoZhunPrice = overseasBiaoZhunPrice;
     }
 
-    @Override
-    public String toString() {
-        return "RetailShop{" +
-                "UserSKUCode='" + UserSKUCode + '\'' +
-                ", GuanFang_price='" + GuanFang_price + '\'' +
-                ", GuanFangCuXiao_price='" + GuanFangCuXiao_price + '\'' +
-                ", TmPrice='" + TmPrice + '\'' +
-                ", TmPriceDifference='" + TmPriceDifference + '\'' +
-                ", TmDiscount='" + TmDiscount + '\'' +
-                ", TMBiaoZhunPrice='" + TMBiaoZhunPrice + '\'' +
-                ", CoachPrice='" + CoachPrice + '\'' +
-                ", CoachPriceDifference='" + CoachPriceDifference + '\'' +
-                ", CoachPriceDiscount='" + CoachPriceDiscount + '\'' +
-                ", CoachBiaoZhunPrice='" + CoachBiaoZhunPrice + '\'' +
-                ", LingShouPrice='" + LingShouPrice + '\'' +
-                ", LingShouPriceDifference='" + LingShouPriceDifference + '\'' +
-                ", LingShouPriceDiscount='" + LingShouPriceDiscount + '\'' +
-                ", LingShouBiaoZhunPrice='" + LingShouBiaoZhunPrice + '\'' +
-                ", JDPrice='" + JDPrice + '\'' +
-                ", JDPriceDifference='" + JDPriceDifference + '\'' +
-                ", JDPriceDiscount='" + JDPriceDiscount + '\'' +
-                ", JDBiaoZhunPrice='" + JDBiaoZhunPrice + '\'' +
-                ", OverseasPrice='" + OverseasPrice + '\'' +
-                ", OverseasPriceDifference='" + OverseasPriceDifference + '\'' +
-                ", OverseasPriceDiscount='" + OverseasPriceDiscount + '\'' +
-                ", OverseasBiaoZhunPrice='" + OverseasBiaoZhunPrice + '\'' +
-                '}';
+    public String getOverseasUrl() {
+        return OverseasUrl;
+    }
+
+    public void setOverseasUrl(String overseasUrl) {
+        OverseasUrl = overseasUrl;
+    }
+
+    public String getGF_Jiacha() {
+        return GF_Jiacha;
+    }
+
+    public void setGF_Jiacha(String GF_Jiacha) {
+        this.GF_Jiacha = GF_Jiacha;
+    }
+
+    public String getGFCX_Jiacha() {
+        return GFCX_Jiacha;
+    }
+
+    public void setGFCX_Jiacha(String GFCX_Jiacha) {
+        this.GFCX_Jiacha = GFCX_Jiacha;
+    }
+
+    public String getFinal_Jiacha() {
+        return Final_Jiacha;
+    }
+
+    public void setFinal_Jiacha(String final_Jiacha) {
+        Final_Jiacha = final_Jiacha;
     }
 }
