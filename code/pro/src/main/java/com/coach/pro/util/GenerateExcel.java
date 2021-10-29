@@ -2376,7 +2376,7 @@ public class GenerateExcel {
             row.createCell(14);
             cell = row.getCell(14);
             cell.setCellType(CellType.STRING);
-            if (outletShop.get(i).getJDPriceDifference() != null && outletShop.get(i).getJDPriceDifference().equals("")) {
+            if (outletShop.get(i).getJDPriceDifference() != null && outletShop.get(i).getJDPriceDifference().equals("Y")) {
                 cell.setCellValue("Y");
                 cell.setCellStyle(currentStyle);
             } else if (outletShop.get(i).getJDPrice() == null) {

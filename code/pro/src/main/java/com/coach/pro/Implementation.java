@@ -7,6 +7,7 @@ import com.coach.pro.util.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -37,6 +38,9 @@ public class Implementation {
             JSONArray jsonArray = jsonData.getJSONArray("data");
             List<CoachItem> list = JSONObject.parseArray(jsonArray.toJSONString(), CoachItem.class);
 
+            //去除小数点后面的0
+            DecimalFormat format = new DecimalFormat("0.##");
+
             /**
              * retail_店铺
              */
@@ -49,8 +53,6 @@ public class Implementation {
             //set转为list
             List<String> quchong = new ArrayList<>();
             quchong.addAll(set);
-
-
             for (int i = 0; i < quchong.size(); i++) {
                 //根据SKU分类信息判断
                 if (StringUtils.retail.contains(quchong.get(i))) {
@@ -59,14 +61,14 @@ public class Implementation {
                 }
             }
 
-            //循环获取官方指导价和官方指导促销价
+            //循环获取官方指导价和到手价(原本是官方指导促销价，现在改为到手价)
             for (int j = 0; j < retail_shop.size(); j++) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getUserSKUCode().equals(retail_shop.get(j).getUserSKUCode())) {
                         if (list.get(i).getShopId() != null) {
                             if (list.get(i).getShopId().equals("49346")) {
                                 retail_shop.get(j).setGuanFang_price(list.get(i).getOriginalPrice());
-                                retail_shop.get(j).setGuanFangCuXiao_price(list.get(i).getGuidancePrice());
+                                retail_shop.get(j).setGuanFangCuXiao_price(list.get(i).getFinalPrice());
                             }
                         }
                     }
@@ -81,7 +83,7 @@ public class Implementation {
                         if (list.get(i).getShopId() != null) {
                             if (list.get(i).getShopId().equals("49905")) {
                                 retail_shop.get(j).setGuanFang_price(list.get(i).getOriginalPrice());
-                                retail_shop.get(j).setGuanFangCuXiao_price(list.get(i).getGuidancePrice());
+                                retail_shop.get(j).setGuanFangCuXiao_price(list.get(i).getFinalPrice());
                             }
                         }
                     }
@@ -96,7 +98,7 @@ public class Implementation {
                         if (list.get(i).getShopId() != null) {
                             if (list.get(i).getShopId().equals("57383")) {
                                 retail_shop.get(j).setGuanFang_price(list.get(i).getOriginalPrice());
-                                retail_shop.get(j).setGuanFangCuXiao_price(list.get(i).getGuidancePrice());
+                                retail_shop.get(j).setGuanFangCuXiao_price(list.get(i).getFinalPrice());
                             }
                         }
                     }
@@ -114,11 +116,14 @@ public class Implementation {
                             if (list.get(i).getShopId().equals("49346")) {
                                 retail_shop.get(j).setTmDiscount(list.get(i).getUsePromotion());
                                 retail_shop.get(j).setTMUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    retail_shop.get(j).setTmPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    retail_shop.get(j).setTmPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setTmPriceDifference("Y");
-                                } else {
+                                } else if (Math.abs( Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price())) ==0){
                                     retail_shop.get(j).setTmPrice(list.get(i).getFinalPrice());
+                                    retail_shop.get(j).setTmPriceDifference("N");
+                                } else{
+                                    retail_shop.get(j).setTmPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setTmPriceDifference("N");
                                 }
                             }
@@ -128,10 +133,13 @@ public class Implementation {
                                 retail_shop.get(j).setLingShouPriceDiscount(list.get(i).getUsePromotion());
                                 retail_shop.get(j).setLingShouUrl(list.get(i).getURL());
                                 if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    retail_shop.get(j).setLingShouPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                    retail_shop.get(j).setLingShouPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price())  ) + ")");
                                     retail_shop.get(j).setLingShouPriceDifference("Y");
-                                } else {
+                                } else if (Math.abs( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) ==0){
                                     retail_shop.get(j).setLingShouPrice(list.get(i).getFinalPrice());
+                                    retail_shop.get(j).setLingShouPriceDifference("N");
+                                } else{
+                                    retail_shop.get(j).setLingShouPrice(list.get(i).getFinalPrice() + "(" + format.format(  Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price())) + ")");
                                     retail_shop.get(j).setLingShouPriceDifference("N");
                                 }
                             }
@@ -140,11 +148,14 @@ public class Implementation {
                             if (list.get(i).getShopId().equals("57383")) {
                                 retail_shop.get(j).setCoachPriceDiscount(list.get(i).getUsePromotion());
                                 retail_shop.get(j).setCoachUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    retail_shop.get(j).setCoachPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    retail_shop.get(j).setCoachPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setCoachPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) ==0){
                                     retail_shop.get(j).setCoachPrice(list.get(i).getFinalPrice());
+                                    retail_shop.get(j).setCoachPriceDifference("N");
+                                } else{
+                                    retail_shop.get(j).setCoachPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setCoachPriceDifference("N");
                                 }
                             }
@@ -153,11 +164,14 @@ public class Implementation {
                             if (list.get(i).getShopId().equals("16797")) {
                                 retail_shop.get(j).setJDPriceDiscount(list.get(i).getUsePromotion());
                                 retail_shop.get(j).setJDUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    retail_shop.get(j).setJDPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    retail_shop.get(j).setJDPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setJDPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price())) ==0){
                                     retail_shop.get(j).setJDPrice(list.get(i).getFinalPrice());
+                                    retail_shop.get(j).setJDPriceDifference("N");
+                                }else{
+                                    retail_shop.get(j).setJDPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setJDPriceDifference("N");
                                 }
                             }
@@ -166,11 +180,14 @@ public class Implementation {
                             if (list.get(i).getShopId().equals("49369")) {
                                 retail_shop.get(j).setOverseasPriceDiscount(list.get(i).getUsePromotion());
                                 retail_shop.get(j).setOverseasUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    retail_shop.get(j).setOverseasPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) >100) {
+                                    retail_shop.get(j).setOverseasPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setOverseasPriceDifference("Y");
-                                } else {
+                                } else if((Math.abs( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) ==0)){
                                     retail_shop.get(j).setOverseasPrice(list.get(i).getFinalPrice());
+                                    retail_shop.get(j).setOverseasPriceDifference("N");
+                                } else{
+                                    retail_shop.get(j).setOverseasPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setOverseasPriceDifference("N");
                                 }
                             }
@@ -291,161 +308,234 @@ public class Implementation {
                             if (list.get(j).getOriginalPrice() != null && !list.get(j).getOriginalPrice().equals("")) {
                                 if (list.get(j).getShopId().equals("49346")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            retail_sku.get(i).setTMPrice(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            retail_sku.get(i).setTMPrice(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice())  ) + ")");
                                             retail_sku.get(i).setGF_Jiacha("Y");
                                             retail_sku.get(i).setTMUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             retail_sku.get(i).setTMPrice(list.get(j).getOriginalPrice());
+                                            retail_sku.get(i).setTMUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGF_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setTMPrice(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice()) - Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice())) + ")");
+                                            //retail_sku.get(i).setGF_Jiacha("N");
                                             retail_sku.get(i).setTMUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            retail_sku.get(i).setTMGuidancePrice(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            retail_sku.get(i).setTMGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setGFCX_Jiacha("Y");
                                             retail_sku.get(i).setTMUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0){
                                             retail_sku.get(i).setTMGuidancePrice(list.get(j).getGuidancePrice());
+                                            retail_sku.get(i).setTMUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setTMGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
                                             retail_sku.get(i).setTMUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            retail_sku.get(i).setTMFinalPrice(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            retail_sku.get(i).setTMFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setFinal_Jiacha("Y");
                                             retail_sku.get(i).setTMUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0) {
                                             retail_sku.get(i).setTMFinalPrice(list.get(j).getFinalPrice());
+                                            retail_sku.get(i).setTMUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setTMFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
                                             retail_sku.get(i).setTMUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("57383")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            retail_sku.get(i).setCoachPrice(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            retail_sku.get(i).setCoachPrice(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             retail_sku.get(i).setGF_Jiacha("Y");
                                             retail_sku.get(i).setCoachUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             retail_sku.get(i).setCoachPrice(list.get(j).getOriginalPrice());
+                                            retail_sku.get(i).setCoachUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGF_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setCoachPrice(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //retail_sku.get(i).setGF_Jiacha("N");
                                             retail_sku.get(i).setCoachUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            retail_sku.get(i).setCoachGuidancePrice(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            retail_sku.get(i).setCoachGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setGFCX_Jiacha("Y");
                                             retail_sku.get(i).setCoachUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0){
                                             retail_sku.get(i).setCoachGuidancePrice(list.get(j).getGuidancePrice());
+                                            retail_sku.get(i).setCoachUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setCoachGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
                                             retail_sku.get(i).setCoachUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            retail_sku.get(i).setCoachFinalPrice(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            retail_sku.get(i).setCoachFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setFinal_Jiacha("Y");
                                             retail_sku.get(i).setCoachUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0){
                                             retail_sku.get(i).setCoachFinalPrice(list.get(j).getFinalPrice());
+                                            retail_sku.get(i).setCoachUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setCoachFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
                                             retail_sku.get(i).setCoachUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("49905")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            retail_sku.get(i).setLingShouPrice(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            retail_sku.get(i).setLingShouPrice(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             retail_sku.get(i).setGF_Jiacha("Y");
                                             retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             retail_sku.get(i).setLingShouPrice(list.get(j).getOriginalPrice());
+                                            retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGF_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setLingShouPrice(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //retail_sku.get(i).setGF_Jiacha("N");
                                             retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            retail_sku.get(i).setLingShouGuidancePrice(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            retail_sku.get(i).setLingShouGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setGFCX_Jiacha("Y");
                                             retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0) {
                                             retail_sku.get(i).setLingShouGuidancePrice(list.get(j).getGuidancePrice());
+                                            retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setLingShouGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
                                             retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            retail_sku.get(i).setLingShouFinalPrice(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            retail_sku.get(i).setLingShouFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setFinal_Jiacha("Y");
                                             retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0) {
                                             retail_sku.get(i).setLingShouFinalPrice(list.get(j).getFinalPrice());
+                                            retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setLingShouFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
                                             retail_sku.get(i).setLingShouUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("16797")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            retail_sku.get(i).setJDPrice(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            retail_sku.get(i).setJDPrice(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             retail_sku.get(i).setGF_Jiacha("Y");
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             retail_sku.get(i).setJDPrice(list.get(j).getOriginalPrice());
+                                            retail_sku.get(i).setJDUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGF_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setJDPrice(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //retail_sku.get(i).setGF_Jiacha("N");
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            retail_sku.get(i).setJDGuidancePrice(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            retail_sku.get(i).setJDGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setGFCX_Jiacha("Y");
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0){
                                             retail_sku.get(i).setJDGuidancePrice(list.get(j).getGuidancePrice());
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
+                                        }else{
+                                            retail_sku.get(i).setJDGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            retail_sku.get(i).setJDFinalPrice(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            retail_sku.get(i).setJDFinalPrice(list.get(j).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getFinalPrice())-Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
                                             retail_sku.get(i).setFinal_Jiacha("Y");
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0) {
                                             retail_sku.get(i).setJDFinalPrice(list.get(j).getFinalPrice());
+                                            retail_sku.get(i).setJDUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
+                                        } else{
+                                            retail_sku.get(i).setJDFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
                                             retail_sku.get(i).setJDUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("49369")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            retail_sku.get(i).setOverseasPrice(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            retail_sku.get(i).setOverseasPrice(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             retail_sku.get(i).setGF_Jiacha("Y");
                                             retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if (Math.abs(Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             retail_sku.get(i).setOverseasPrice(list.get(j).getOriginalPrice());
+                                            retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGF_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setOverseasPrice(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(retail_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //retail_sku.get(i).setGF_Jiacha("N");
                                             retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            retail_sku.get(i).setOverseasGuidancePrice(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            retail_sku.get(i).setOverseasGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(retail_sku.get(i).getGuidancePrice())  ) + ")");
                                             retail_sku.get(i).setGFCX_Jiacha("Y");
                                             retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0) {
                                             retail_sku.get(i).setOverseasGuidancePrice(list.get(j).getGuidancePrice());
+                                            retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setOverseasGuidancePrice(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice()) -Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setGFCX_Jiacha("N");
                                             retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            retail_sku.get(i).setOverseasFinalPrice(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            retail_sku.get(i).setOverseasFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())-Double.parseDouble(retail_sku.get(i).getGuidancePrice())  ) + ")");
                                             retail_sku.get(i).setFinal_Jiacha("Y");
                                             retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(retail_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0) {
                                             retail_sku.get(i).setOverseasFinalPrice(list.get(j).getFinalPrice());
+                                            retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
+                                        }else{
+                                            retail_sku.get(i).setOverseasFinalPrice(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(retail_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //retail_sku.get(i).setFinal_Jiacha("N");
                                             retail_sku.get(i).setOverseasUrl(list.get(j).getURL());
                                         }
                                     }
@@ -482,7 +572,7 @@ public class Implementation {
                         if (list.get(i).getShopId() != null) {
                             if (list.get(i).getShopId().equals("49357")) {
                                 outlet_Shop.get(j).setGuanFang_price(list.get(i).getOriginalPrice());
-                                outlet_Shop.get(j).setGuanFangCuXiao_price(list.get(i).getGuidancePrice());
+                                outlet_Shop.get(j).setGuanFangCuXiao_price(list.get(i).getFinalPrice());
                             }
                         }
                     }
@@ -497,7 +587,7 @@ public class Implementation {
                         if (list.get(i).getShopId() != null) {
                             if (list.get(i).getShopId().equals("57523")) {
                                 outlet_Shop.get(j).setGuanFang_price(list.get(i).getOriginalPrice());
-                                outlet_Shop.get(j).setGuanFangCuXiao_price(list.get(i).getGuidancePrice());
+                                outlet_Shop.get(j).setGuanFangCuXiao_price(list.get(i).getFinalPrice());
                             }
                         }
                     }
@@ -512,55 +602,70 @@ public class Implementation {
                             if (list.get(i).getShopId().equals("49357")) {
                                 outlet_Shop.get(j).setOutletDiscount(list.get(i).getUsePromotion());
                                 outlet_Shop.get(j).setOutletUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    outlet_Shop.get(j).setOutletPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    outlet_Shop.get(j).setOutletPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setOutletPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) ==0){
                                     outlet_Shop.get(j).setOutletPrice(list.get(i).getFinalPrice());
+                                    outlet_Shop.get(j).setOutletPriceDifference("N");
+                                }else{
+                                    outlet_Shop.get(j).setOutletPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setOutletPriceDifference("N");
                                 }
                             }
                             if (list.get(i).getShopId().equals("57523")) {
                                 outlet_Shop.get(j).setCoachPriceDiscount(list.get(i).getUsePromotion());
                                 outlet_Shop.get(j).setCoachUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    outlet_Shop.get(j).setCoachPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    outlet_Shop.get(j).setCoachPrice(list.get(i).getFinalPrice() + "(" + format.format(  Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setCoachPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) ==0){
                                     outlet_Shop.get(j).setCoachPrice(list.get(i).getFinalPrice());
+                                    outlet_Shop.get(j).setCoachPriceDifference("N");
+                                }else{
+                                    outlet_Shop.get(j).setCoachPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setCoachPriceDifference("N");
                                 }
                             }
                             if (list.get(i).getShopId().equals("49369")) {
                                 outlet_Shop.get(j).setOverseasPriceDiscount(list.get(i).getUsePromotion());
                                 outlet_Shop.get(j).setOverseasUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    outlet_Shop.get(j).setOverseasPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    outlet_Shop.get(j).setOverseasPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setOverseasPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) ==0){
                                     outlet_Shop.get(j).setOverseasPrice(list.get(i).getFinalPrice());
+                                    outlet_Shop.get(j).setOverseasPriceDifference("N");
+                                }else{
+                                    outlet_Shop.get(j).setOverseasPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setOverseasPriceDifference("N");
                                 }
                             }
                             if (list.get(i).getShopId().equals("16797")) {
                                 outlet_Shop.get(j).setJDPriceDiscount(list.get(i).getUsePromotion());
                                 outlet_Shop.get(j).setJDUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    outlet_Shop.get(j).setJDPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    outlet_Shop.get(j).setJDPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setJDPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) ==0){
                                     outlet_Shop.get(j).setJDPrice(list.get(i).getFinalPrice());
+                                    outlet_Shop.get(j).setJDPriceDifference("N");
+                                }else{
+                                    outlet_Shop.get(j).setJDPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setJDPriceDifference("N");
                                 }
                             }
                             if (list.get(i).getShopId().equals("49935")) {
                                 outlet_Shop.get(j).setCoachOSPriceDiscount(list.get(i).getUsePromotion());
                                 outlet_Shop.get(j).setCoachOSUrl(list.get(i).getURL());
-                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) > 100) {
-                                    outlet_Shop.get(j).setCoachOSPrice(list.get(i).getFinalPrice() + "(" + (Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) + ")");
+                                if (Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) >100) {
+                                    outlet_Shop.get(j).setCoachOSPrice(list.get(i).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(i).getFinalPrice())- Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     outlet_Shop.get(j).setCoachOSPriceDifference("Y");
-                                } else {
+                                } else if(Math.abs(Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price()) - Double.parseDouble(list.get(i).getFinalPrice())) ==0){
                                     outlet_Shop.get(j).setCoachOSPrice(list.get(i).getFinalPrice());
+                                    outlet_Shop.get(j).setCoachOSPriceDifference("N");
+                                }else{
+                                    outlet_Shop.get(j).setCoachOSPrice(list.get(i).getFinalPrice() + "(" + format.format(  Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(outlet_Shop.get(j).getGuanFangCuXiao_price())) + ")");
                                     outlet_Shop.get(j).setCoachOSPriceDifference("N");
                                 }
                             }
@@ -630,166 +735,235 @@ public class Implementation {
                             if (list.get(j).getOriginalPrice() != null && !list.get(j).getOriginalPrice().equals("")) {
                                 if (list.get(j).getShopId().equals("49357")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            outlet_sku.get(i).setOutlieFlagshipStore_gfzdj(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            outlet_sku.get(i).setOutlieFlagshipStore_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdj("Y");
                                             outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             outlet_sku.get(i).setOutlieFlagshipStore_gfzdj(list.get(j).getOriginalPrice());
+                                            outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                        }else{
+                                            outlet_sku.get(i).setOutlieFlagshipStore_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
                                             outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            outlet_sku.get(i).setOutlieFlagshipStore_gfzdcxj(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            outlet_sku.get(i).setOutlieFlagshipStore_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdcxj("Y");
                                             outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0) {
                                             outlet_sku.get(i).setOutlieFlagshipStore_gfzdcxj(list.get(j).getGuidancePrice());
+                                            outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                        }else{
+                                            outlet_sku.get(i).setOutlieFlagshipStore_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
                                             outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            outlet_sku.get(i).setOutlieFlagshipStore_dsj(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            outlet_sku.get(i).setOutlieFlagshipStore_dsj(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_dsj("Y");
                                             outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0) {
                                             outlet_sku.get(i).setOutlieFlagshipStore_dsj(list.get(j).getFinalPrice());
+                                            outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
+                                        } else{
+                                            outlet_sku.get(i).setOutlieFlagshipStore_dsj(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
                                             outlet_sku.get(i).setOutlieUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("57523")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            outlet_sku.get(i).setWebsite_gfzdj(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            outlet_sku.get(i).setWebsite_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdj("Y");
                                             outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             outlet_sku.get(i).setWebsite_gfzdj(list.get(j).getOriginalPrice());
+                                            outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                        }else{
+                                            outlet_sku.get(i).setWebsite_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
                                             outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            outlet_sku.get(i).setWebsite_gfzdcxj(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            outlet_sku.get(i).setWebsite_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdcxj("Y");
                                             outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0){
                                             outlet_sku.get(i).setWebsite_gfzdcxj(list.get(j).getGuidancePrice());
+                                            outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                        }else{
+                                            outlet_sku.get(i).setWebsite_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
                                             outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            outlet_sku.get(i).setWebsite_dsj(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            outlet_sku.get(i).setWebsite_dsj(list.get(j).getFinalPrice() + "(" + format.format(  Double.parseDouble(list.get(j).getFinalPrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice())) + ")");
                                             outlet_sku.get(i).setPricrDifference_dsj("Y");
                                             outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0){
                                             outlet_sku.get(i).setWebsite_dsj(list.get(j).getFinalPrice());
+                                            outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
+                                        }else{
+                                            outlet_sku.get(i).setWebsite_dsj(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
                                             outlet_sku.get(i).setWebsiteUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("49369")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            outlet_sku.get(i).setTMallGlobalStore_gfzdj(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            outlet_sku.get(i).setTMallGlobalStore_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdj("Y");
                                             outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             outlet_sku.get(i).setTMallGlobalStore_gfzdj(list.get(j).getOriginalPrice());
+                                            outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                        }else{
+                                            outlet_sku.get(i).setTMallGlobalStore_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
                                             outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            outlet_sku.get(i).setTMallGlobalStore_gfzdcxj(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            outlet_sku.get(i).setTMallGlobalStore_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format(Double.parseDouble(list.get(j).getGuidancePrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdcxj("Y");
                                             outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0) {
                                             outlet_sku.get(i).setTMallGlobalStore_gfzdcxj(list.get(j).getGuidancePrice());
+                                            outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                        } else{
+                                            outlet_sku.get(i).setTMallGlobalStore_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
                                             outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            outlet_sku.get(i).setTMallGlobalStore_dsj(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            outlet_sku.get(i).setTMallGlobalStore_dsj(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_dsj("Y");
                                             outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0){
                                             outlet_sku.get(i).setTMallGlobalStore_dsj(list.get(j).getFinalPrice());
+                                            outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
+                                        } else{
+                                            outlet_sku.get(i).setTMallGlobalStore_dsj(list.get(j).getFinalPrice() + "(" + format.format(  Double.parseDouble(list.get(j).getFinalPrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice())) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
                                             outlet_sku.get(i).setTMallUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("16797")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            outlet_sku.get(i).setJDSelfOperated_gfzdj(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            outlet_sku.get(i).setJDSelfOperated_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getOriginalPrice())-Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdj("Y");
                                             outlet_sku.get(i).setJDUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0) {
                                             outlet_sku.get(i).setJDSelfOperated_gfzdj(list.get(j).getOriginalPrice());
                                             outlet_sku.get(i).setJDUrl(list.get(j).getURL());
-                                            outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                        } else{
+                                            outlet_sku.get(i).setJDSelfOperated_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                            outlet_sku.get(i).setJDUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            outlet_sku.get(i).setJDSelfOperated_gfzdcxj(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            outlet_sku.get(i).setJDSelfOperated_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdcxj("Y");
                                             outlet_sku.get(i).setJDUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0) {
                                             outlet_sku.get(i).setJDSelfOperated_gfzdcxj(list.get(j).getGuidancePrice());
                                             outlet_sku.get(i).setJDUrl(list.get(j).getURL());
-                                            outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                        }else{
+                                            outlet_sku.get(i).setJDSelfOperated_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                            outlet_sku.get(i).setJDUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            outlet_sku.get(i).setJDSelfOperated_dsj(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            outlet_sku.get(i).setJDSelfOperated_dsj(list.get(j).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getFinalPrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_dsj("Y");
                                             outlet_sku.get(i).setJDUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0){
                                             outlet_sku.get(i).setJDSelfOperated_dsj(list.get(j).getFinalPrice());
                                             outlet_sku.get(i).setJDUrl(list.get(j).getURL());
-                                            outlet_sku.get(i).setPricrDifference_dsj("N");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
+                                        }else{
+                                            outlet_sku.get(i).setJDSelfOperated_dsj(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
+                                            outlet_sku.get(i).setJDUrl(list.get(j).getURL());
                                         }
                                     }
                                 }
                                 if (list.get(j).getShopId().equals("49935")) {
                                     if (list.get(j).getOriginalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) > 100) {
-                                            outlet_sku.get(i).setOverseasStores_gfzdj(list.get(j).getOriginalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) >100) {
+                                            outlet_sku.get(i).setOverseasStores_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdj("Y");
                                             outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                            outlet_sku.get(i).setPricrDifference_gfzdj("N");
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) - Double.parseDouble(list.get(j).getOriginalPrice())) ==0){
                                             outlet_sku.get(i).setOverseasStores_gfzdj(list.get(j).getOriginalPrice());
+                                            outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
+                                        }else{
+                                            outlet_sku.get(i).setOverseasStores_gfzdj(list.get(j).getOriginalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getOriginalPrice())- Double.parseDouble(outlet_sku.get(i).getBiaoZhunPrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdj("N");
                                             outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getGuidancePrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) > 100) {
-                                            outlet_sku.get(i).setOverseasStores_gfzdcxj(list.get(j).getGuidancePrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) >100) {
+                                            outlet_sku.get(i).setOverseasStores_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
                                             outlet_sku.get(i).setPricrDifference_gfzdcxj("Y");
                                             outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getGuidancePrice())) ==0){
                                             outlet_sku.get(i).setOverseasStores_gfzdcxj(list.get(j).getGuidancePrice());
                                             outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                            outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                        }else{
+                                            outlet_sku.get(i).setOverseasStores_gfzdcxj(list.get(j).getGuidancePrice() + "(" + format.format( Double.parseDouble(list.get(j).getGuidancePrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_gfzdcxj("N");
+                                            outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
                                         }
                                     }
                                     if (list.get(j).getFinalPrice() != null) {
-                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) > 100) {
-                                            outlet_sku.get(i).setOverseasStores_dsj(list.get(j).getFinalPrice() + "(" + (Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) + ")");
+                                        if (Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) >100) {
+                                            outlet_sku.get(i).setOverseasStores_dsj(list.get(j).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(j).getFinalPrice())- Double.parseDouble(outlet_sku.get(i).getGuidancePrice())) + ")");
                                             outlet_sku.get(i).setPricrDifference_dsj("Y");
                                             outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
-                                        } else {
+                                        } else if(Math.abs(Double.parseDouble(outlet_sku.get(i).getGuidancePrice()) - Double.parseDouble(list.get(j).getFinalPrice())) ==0){
                                             outlet_sku.get(i).setOverseasStores_dsj(list.get(j).getFinalPrice());
-                                            outlet_sku.get(i).setPricrDifference_dsj("N");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
+                                            outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
+                                        }else{
+                                            outlet_sku.get(i).setOverseasStores_dsj(list.get(j).getFinalPrice() + "(" + format.format(Double.parseDouble(list.get(j).getFinalPrice())-Double.parseDouble(outlet_sku.get(i).getGuidancePrice())  ) + ")");
+                                            //outlet_sku.get(i).setPricrDifference_dsj("N");
                                             outlet_sku.get(i).setOverseasUrl(list.get(j).getURL());
                                         }
                                     }
