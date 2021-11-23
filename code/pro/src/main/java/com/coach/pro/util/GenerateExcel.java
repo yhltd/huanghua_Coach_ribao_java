@@ -1174,31 +1174,31 @@ public class GenerateExcel {
                         overseas = Double.parseDouble(retailSku.get(i).getOverseasPrice());
                     }
                 }
-                tm = 1000000;
-                if (retailSku.get(i).getTMPrice() != null) {
-                    if (retailSku.get(i).getTMPrice().contains("(")) {
-                        tm = Double.parseDouble(retailSku.get(i).getTMPrice().split("\\(")[0]);
-                    } else {
-                        tm = Double.parseDouble(retailSku.get(i).getTMPrice());
-                    }
-                }
-                ls = 1000000;
-                if (retailSku.get(i).getLingShouPrice() != null) {
-                    if (retailSku.get(i).getLingShouPrice().contains("(")) {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice().split("\\(")[0]);
-                    } else {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice());
-                    }
-                }
-                coach = 1000000;
-                if (retailSku.get(i).getCoachPrice() != null) {
-                    if (retailSku.get(i).getCoachPrice().contains("(")) {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice());
-                    }
-                }
-                if (jd < overseas && jd < tm && jd < ls && jd < coach) {
+//                tm = 1000000;
+//                if (retailSku.get(i).getTMPrice() != null) {
+//                    if (retailSku.get(i).getTMPrice().contains("(")) {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMPrice().split("\\(")[0]);
+//                    } else {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMPrice());
+//                    }
+//                }
+//                ls = 1000000;
+//                if (retailSku.get(i).getLingShouPrice() != null) {
+//                    if (retailSku.get(i).getLingShouPrice().contains("(")) {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice().split("\\(")[0]);
+//                    } else {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice());
+//                    }
+//                }
+//                coach = 1000000;
+//                if (retailSku.get(i).getCoachPrice() != null) {
+//                    if (retailSku.get(i).getCoachPrice().contains("(")) {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice());
+//                    }
+//                }
+                if (jd < overseas) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -1233,31 +1233,31 @@ public class GenerateExcel {
                         overseas = Double.parseDouble(retailSku.get(i).getOverseasPrice());
                     }
                 }
-                tm = 1000000;
-                if (retailSku.get(i).getTMPrice() != null) {
-                    if (retailSku.get(i).getTMPrice().contains("(")) {
-                        tm = Double.parseDouble(retailSku.get(i).getTMPrice().split("\\(")[0]);
-                    } else {
-                        tm = Double.parseDouble(retailSku.get(i).getTMPrice());
-                    }
-                }
-                ls = 1000000;
-                if (retailSku.get(i).getLingShouPrice() != null) {
-                    if (retailSku.get(i).getLingShouPrice().contains("(")) {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice().split("\\(")[0]);
-                    } else {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice());
-                    }
-                }
-                coach = 1000000;
-                if (retailSku.get(i).getCoachPrice() != null) {
-                    if (retailSku.get(i).getCoachPrice().contains("(")) {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice());
-                    }
-                }
-                if (overseas < jd && overseas < tm && overseas < ls && overseas < coach) {
+//                tm = 1000000;
+//                if (retailSku.get(i).getTMPrice() != null) {
+//                    if (retailSku.get(i).getTMPrice().contains("(")) {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMPrice().split("\\(")[0]);
+//                    } else {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMPrice());
+//                    }
+//                }
+//                ls = 1000000;
+//                if (retailSku.get(i).getLingShouPrice() != null) {
+//                    if (retailSku.get(i).getLingShouPrice().contains("(")) {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice().split("\\(")[0]);
+//                    } else {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouPrice());
+//                    }
+//                }
+//                coach = 1000000;
+//                if (retailSku.get(i).getCoachPrice() != null) {
+//                    if (retailSku.get(i).getCoachPrice().contains("(")) {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachPrice());
+//                    }
+//                }
+                if (overseas < jd) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -1357,31 +1357,31 @@ public class GenerateExcel {
                         overseas = Double.parseDouble(retailSku.get(i).getOverseasGuidancePrice());
                     }
                 }
-                tm = 1000000;
-                if (retailSku.get(i).getTMGuidancePrice() != null) {
-                    if (retailSku.get(i).getTMGuidancePrice().contains("(")) {
-                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice().split("\\(")[0]);
-                    } else {
-                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice());
-                    }
-                }
-                ls = 1000000;
-                if (retailSku.get(i).getLingShouGuidancePrice() != null) {
-                    if (retailSku.get(i).getLingShouGuidancePrice().contains("(")) {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice().split("\\(")[0]);
-                    } else {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice());
-                    }
-                }
-                coach = 1000000;
-                if (retailSku.get(i).getCoachGuidancePrice() != null) {
-                    if (retailSku.get(i).getCoachGuidancePrice().contains("(")) {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice());
-                    }
-                }
-                if (jd < overseas && jd < tm && jd < ls && jd < coach) {
+//                tm = 1000000;
+//                if (retailSku.get(i).getTMGuidancePrice() != null) {
+//                    if (retailSku.get(i).getTMGuidancePrice().contains("(")) {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice().split("\\(")[0]);
+//                    } else {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice());
+//                    }
+//                }
+//                ls = 1000000;
+//                if (retailSku.get(i).getLingShouGuidancePrice() != null) {
+//                    if (retailSku.get(i).getLingShouGuidancePrice().contains("(")) {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice().split("\\(")[0]);
+//                    } else {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice());
+//                    }
+//                }
+//                coach = 1000000;
+//                if (retailSku.get(i).getCoachGuidancePrice() != null) {
+//                    if (retailSku.get(i).getCoachGuidancePrice().contains("(")) {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice());
+//                    }
+//                }
+                if (jd < overseas) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -1416,31 +1416,31 @@ public class GenerateExcel {
                         overseas = Double.parseDouble(retailSku.get(i).getOverseasGuidancePrice());
                     }
                 }
-                tm = 1000000;
-                if (retailSku.get(i).getTMGuidancePrice() != null) {
-                    if (retailSku.get(i).getTMGuidancePrice().contains("(")) {
-                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice().split("\\(")[0]);
-                    } else {
-                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice());
-                    }
-                }
-                ls = 1000000;
-                if (retailSku.get(i).getLingShouGuidancePrice() != null) {
-                    if (retailSku.get(i).getLingShouGuidancePrice().contains("(")) {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice().split("\\(")[0]);
-                    } else {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice());
-                    }
-                }
-                coach = 1000000;
-                if (retailSku.get(i).getCoachGuidancePrice() != null) {
-                    if (retailSku.get(i).getCoachGuidancePrice().contains("(")) {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice());
-                    }
-                }
-                if (overseas < jd && overseas < tm && overseas < ls && overseas < coach) {
+//                tm = 1000000;
+//                if (retailSku.get(i).getTMGuidancePrice() != null) {
+//                    if (retailSku.get(i).getTMGuidancePrice().contains("(")) {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice().split("\\(")[0]);
+//                    } else {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMGuidancePrice());
+//                    }
+//                }
+//                ls = 1000000;
+//                if (retailSku.get(i).getLingShouGuidancePrice() != null) {
+//                    if (retailSku.get(i).getLingShouGuidancePrice().contains("(")) {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice().split("\\(")[0]);
+//                    } else {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouGuidancePrice());
+//                    }
+//                }
+//                coach = 1000000;
+//                if (retailSku.get(i).getCoachGuidancePrice() != null) {
+//                    if (retailSku.get(i).getCoachGuidancePrice().contains("(")) {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachGuidancePrice());
+//                    }
+//                }
+                if (overseas < jd) {
                     cell.setCellStyle(style);
                 }
 
@@ -1542,31 +1542,31 @@ public class GenerateExcel {
                         overseas = Double.parseDouble(retailSku.get(i).getOverseasFinalPrice());
                     }
                 }
-                tm = 1000000;
-                if (retailSku.get(i).getTMFinalPrice() != null) {
-                    if (retailSku.get(i).getTMFinalPrice().contains("(")) {
-                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice().split("\\(")[0]);
-                    } else {
-                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice());
-                    }
-                }
-                ls = 1000000;
-                if (retailSku.get(i).getLingShouFinalPrice() != null) {
-                    if (retailSku.get(i).getLingShouFinalPrice().contains("(")) {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice().split("\\(")[0]);
-                    } else {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice());
-                    }
-                }
-                coach = 1000000;
-                if (retailSku.get(i).getCoachFinalPrice() != null) {
-                    if (retailSku.get(i).getCoachFinalPrice().contains("(")) {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice());
-                    }
-                }
-                if (jd < overseas && jd < tm && jd < ls && jd < coach) {
+//                tm = 1000000;
+//                if (retailSku.get(i).getTMFinalPrice() != null) {
+//                    if (retailSku.get(i).getTMFinalPrice().contains("(")) {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice().split("\\(")[0]);
+//                    } else {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice());
+//                    }
+//                }
+//                ls = 1000000;
+//                if (retailSku.get(i).getLingShouFinalPrice() != null) {
+//                    if (retailSku.get(i).getLingShouFinalPrice().contains("(")) {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice().split("\\(")[0]);
+//                    } else {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice());
+//                    }
+//                }
+//                coach = 1000000;
+//                if (retailSku.get(i).getCoachFinalPrice() != null) {
+//                    if (retailSku.get(i).getCoachFinalPrice().contains("(")) {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice());
+//                    }
+//                }
+                if (jd < overseas) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -1602,31 +1602,31 @@ public class GenerateExcel {
                         overseas = Double.parseDouble(retailSku.get(i).getOverseasFinalPrice());
                     }
                 }
-                tm = 1000000;
-                if (retailSku.get(i).getTMFinalPrice() != null) {
-                    if (retailSku.get(i).getTMFinalPrice().contains("(")) {
-                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice().split("\\(")[0]);
-                    } else {
-                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice());
-                    }
-                }
-                ls = 1000000;
-                if (retailSku.get(i).getLingShouFinalPrice() != null) {
-                    if (retailSku.get(i).getLingShouFinalPrice().contains("(")) {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice().split("\\(")[0]);
-                    } else {
-                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice());
-                    }
-                }
-                coach = 1000000;
-                if (retailSku.get(i).getCoachFinalPrice() != null) {
-                    if (retailSku.get(i).getCoachFinalPrice().contains("(")) {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice());
-                    }
-                }
-                if (overseas < jd && overseas < tm && overseas < ls && overseas < coach) {
+//                tm = 1000000;
+//                if (retailSku.get(i).getTMFinalPrice() != null) {
+//                    if (retailSku.get(i).getTMFinalPrice().contains("(")) {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice().split("\\(")[0]);
+//                    } else {
+//                        tm = Double.parseDouble(retailSku.get(i).getTMFinalPrice());
+//                    }
+//                }
+//                ls = 1000000;
+//                if (retailSku.get(i).getLingShouFinalPrice() != null) {
+//                    if (retailSku.get(i).getLingShouFinalPrice().contains("(")) {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice().split("\\(")[0]);
+//                    } else {
+//                        ls = Double.parseDouble(retailSku.get(i).getLingShouFinalPrice());
+//                    }
+//                }
+//                coach = 1000000;
+//                if (retailSku.get(i).getCoachFinalPrice() != null) {
+//                    if (retailSku.get(i).getCoachFinalPrice().contains("(")) {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(retailSku.get(i).getCoachFinalPrice());
+//                    }
+//                }
+                if (overseas < jd ) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -2612,23 +2612,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_gfzdj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_gfzdj() != null) {
-                    if (outletSku.get(i).getWebsite_gfzdj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_gfzdj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj());
-                    }
-                }
-                if (hw < jd && hw < coach && hw < sqhw && hw < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_gfzdj() != null) {
+//                    if (outletSku.get(i).getWebsite_gfzdj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_gfzdj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj());
+//                    }
+//                }
+                if (hw < jd  && hw < sqhw ) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -2671,23 +2671,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_gfzdj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_gfzdj() != null) {
-                    if (outletSku.get(i).getWebsite_gfzdj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_gfzdj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj());
-                    }
-                }
-                if (jd < hw && jd < coach && jd < sqhw && jd < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_gfzdj() != null) {
+//                    if (outletSku.get(i).getWebsite_gfzdj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_gfzdj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj());
+//                    }
+//                }
+                if (jd < hw  && jd < sqhw ) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -2731,23 +2731,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_gfzdj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_gfzdj() != null) {
-                    if (outletSku.get(i).getWebsite_gfzdj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_gfzdj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj());
-                    }
-                }
-                if (sqhw < hw && sqhw < coach && sqhw < jd && sqhw < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_gfzdj() != null) {
+//                    if (outletSku.get(i).getWebsite_gfzdj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_gfzdj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdj());
+//                    }
+//                }
+                if (sqhw < hw  && sqhw < jd ) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -2840,23 +2840,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_gfzdcxj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_gfzdcxj() != null) {
-                    if (outletSku.get(i).getWebsite_gfzdcxj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj());
-                    }
-                }
-                if (hw < jd && hw < coach && hw < sqhw && hw < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_gfzdcxj() != null) {
+//                    if (outletSku.get(i).getWebsite_gfzdcxj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj());
+//                    }
+//                }
+                if (hw < jd  && hw < sqhw ) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -2899,23 +2899,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_gfzdcxj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_gfzdcxj() != null) {
-                    if (outletSku.get(i).getWebsite_gfzdcxj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj());
-                    }
-                }
-                if (jd < hw && jd < coach && jd < sqhw && jd < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_gfzdcxj() != null) {
+//                    if (outletSku.get(i).getWebsite_gfzdcxj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj());
+//                    }
+//                }
+                if (jd < hw  && jd < sqhw ) {
                     cell.setCellStyle(style);
                 }
             } else {
@@ -2958,23 +2958,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_gfzdcxj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_gfzdcxj() != null) {
-                    if (outletSku.get(i).getWebsite_gfzdcxj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj());
-                    }
-                }
-                if (sqhw < hw && sqhw < coach && sqhw < jd && sqhw < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_gfzdcxj() != null) {
+//                    if (outletSku.get(i).getWebsite_gfzdcxj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_gfzdcxj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_gfzdcxj());
+//                    }
+//                }
+                if (sqhw < hw  && sqhw < jd ) {
                     cell.setCellStyle(style);
                 }
 
@@ -3068,23 +3068,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_dsj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_dsj() != null) {
-                    if (outletSku.get(i).getWebsite_dsj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_dsj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_dsj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj());
-                    }
-                }
-                if (hw < sqhw && hw < coach && hw < jd && hw < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_dsj() != null) {
+//                    if (outletSku.get(i).getWebsite_dsj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_dsj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_dsj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj());
+//                    }
+//                }
+                if (hw < sqhw && hw < jd ) {
                     cell.setCellStyle(style);
                 }
 
@@ -3128,23 +3128,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_dsj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_dsj() != null) {
-                    if (outletSku.get(i).getWebsite_dsj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_dsj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_dsj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj());
-                    }
-                }
-                if (jd < hw && jd < coach && jd < sqhw && jd < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_dsj() != null) {
+//                    if (outletSku.get(i).getWebsite_dsj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_dsj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_dsj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj());
+//                    }
+//                }
+                if (jd < hw  && jd < sqhw ) {
                     cell.setCellStyle(style);
                 }
 
@@ -3188,23 +3188,23 @@ public class GenerateExcel {
                         hw = Double.parseDouble(outletSku.get(i).getTMallGlobalStore_dsj());
                     }
                 }
-                coach = 1000000;
-                if (outletSku.get(i).getWebsite_dsj() != null) {
-                    if (outletSku.get(i).getWebsite_dsj().contains("(")) {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj().split("\\(")[0]);
-                    } else {
-                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj());
-                    }
-                }
-                outlet = 1000000;
-                if (outletSku.get(i).getOutlieFlagshipStore_dsj() != null) {
-                    if (outletSku.get(i).getOutlieFlagshipStore_dsj().contains("(")) {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj().split("\\(")[0]);
-                    } else {
-                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj());
-                    }
-                }
-                if (sqhw < hw && sqhw < coach && sqhw < jd && sqhw < outlet) {
+//                coach = 1000000;
+//                if (outletSku.get(i).getWebsite_dsj() != null) {
+//                    if (outletSku.get(i).getWebsite_dsj().contains("(")) {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj().split("\\(")[0]);
+//                    } else {
+//                        coach = Double.parseDouble(outletSku.get(i).getWebsite_dsj());
+//                    }
+//                }
+//                outlet = 1000000;
+//                if (outletSku.get(i).getOutlieFlagshipStore_dsj() != null) {
+//                    if (outletSku.get(i).getOutlieFlagshipStore_dsj().contains("(")) {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj().split("\\(")[0]);
+//                    } else {
+//                        outlet = Double.parseDouble(outletSku.get(i).getOutlieFlagshipStore_dsj());
+//                    }
+//                }
+                if (sqhw < hw && sqhw < jd ) {
                     cell.setCellStyle(style);
                 }
 

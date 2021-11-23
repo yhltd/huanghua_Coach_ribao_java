@@ -32,7 +32,7 @@ public class ItemInfoController {
     public ResultInfo getList() {
         try {
             //接口url
-            String url = "http://imagetest.simplybrand.com/api/product/findProductInfoPage";
+            String url = "http://similarpic.simplybrand.com/api/product/findProductInfoPage";
             //参数
             String param = "TaskID=47&SubID=1&page=1&size=";
             //参数
@@ -169,6 +169,7 @@ public class ItemInfoController {
                                     retail_shop.get(j).setTmPrice(list.get(i).getFinalPrice() + "(" + format.format( Double.parseDouble(list.get(i).getFinalPrice())-Double.parseDouble(retail_shop.get(j).getGuanFangCuXiao_price()) ) + ")");
                                     retail_shop.get(j).setTmPriceDifference("N");
                                 }
+
                             }
                         }
                         if (list.get(i).getUserSKUCode().equals(retail_shop.get(j).getUserSKUCode())) {

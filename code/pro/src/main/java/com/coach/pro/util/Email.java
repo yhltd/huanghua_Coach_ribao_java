@@ -43,6 +43,24 @@ public class Email {
             e.printStackTrace();
         }
 
+        File senderFile=new File("C:\\coach\\addressee\\sender.txt");
+        String sender = "";
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(senderFile));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                if(sender.equals("")){
+                    sender=s;
+                }else{
+                    sender = sender + "," +s;
+                }
+
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         prop = new Properties();
         prop.put("mail.transport.protocol", "smtp"); // 协议
         prop.put("mail.smtp.host", zhuji); // 主机
@@ -50,7 +68,7 @@ public class Email {
         prop.put("mail.smtp.auth", "true"); // 用户密码认证
         prop.put("mail.debug", "true"); // 调试模式
         try {
-            sendMan = new InternetAddress("1435329071@qq.com");
+            sendMan = new InternetAddress(sender);
         } catch (AddressException e) {
             throw new RuntimeException(e);
         }
