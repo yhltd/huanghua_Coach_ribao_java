@@ -65,7 +65,7 @@ public class ItemInfoController {
     public ResultInfo toExcel(HttpServletResponse response) throws IOException {
         try {
             //接口url
-            String url = "http://imagetest.simplybrand.com/api/product/findProductInfoPage";
+            String url = "http://similarpic.simplybrand.com/api/product/findProductInfoPage";
             //参数
             String param = "TaskID=47&SubID=1&page=1&size=";
             //参数
